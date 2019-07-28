@@ -100,24 +100,20 @@ class VAE(SessionGenerator, NanChecker):
             self.kl_loss = -0.5*tf.reduce_sum(1 + self.coddings_logvar - tf.square(self.coddings_mean) - tf.exp(self.coddings_logvar), axis=1) 
 
             if loss == 'mse':
-                self.reconstruction_loss = tf.losses.mean_squared_error(self.input, self.output, 
-                        reduction=tf.losses.Reduction.NONE)
+                self.reconstruction_loss = tf.losses.mean_squared_error(self.input, self.output)
             elif loss == 'mae':
-                self.reconstruction_loss = tf.losses.absolute_difference(self.input, self.output, 
-                        reduction=tf.losses.Reduction.NONE)
+                self.reconstruction_loss = tf.losses.absolute_difference(self.input, self.output) 
             else:
                 raise
 
-            self.reconstruction_loss= tf.reduce_sum(self.reconstruction_loss, axis=1)
-
-            self.vae_loss_sum = self.regularization_loss + tf.reduce_sum(self.reconstruction_loss + self.kl_loss)
-            vae_loss = tf.truediv(self.vae_loss_sum, tf.cast(tf.shape(self.output)[0], dtype=tf.float32))
+            vae_loss_sum = self.regularization_loss + self.reconstruction_loss + self.kl_loss
+            self.vae_loss = tf.truediv(vae_loss_sum, tf.cast(tf.shape(self.output)[0], dtype=tf.float32))
 
             self.global_step = tf.train.create_global_step()
 
             update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
             with tf.control_dependencies(update_ops):
-                self.training = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(vae_loss, global_step=self.global_step)
+                self.training = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(vae_loss_sum, global_step=self.global_step)
 
             # zjisti jeslti se zmeni
             self.session.run(tf.global_variables_initializer())
