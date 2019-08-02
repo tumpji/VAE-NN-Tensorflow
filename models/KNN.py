@@ -25,27 +25,7 @@ import tensorflow as tf
 from tensorflow.keras.layers import Input
 
 import unittest
-
-class Logger:
-    def __init__(self, verbose=0):
-        self.verbose_level = verbose
-    def log(self, level, msg):
-        if self.verbose_level > level:
-            print(msg)
-
-class Classifier(Logger, tf.keras.Model):
-    def __init__(self, **kwargs):
-        Logger.__init__(self, **kwargs)
-        tf.keras.Model.__init__(self)
-
-    @abstractmethod
-    def fit(X, Y):
-        pass
-
-    @abstractmethod
-    def predict(X):
-        pass
-
+from tools import *
 
 class KNN(Classifier):
     class METRIC (Enum):
