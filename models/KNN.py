@@ -2,15 +2,18 @@
 # -*- coding: utf-8 -*-
 # =============================================================================
 #         FILE: KNN.py
-#  DESCRIPTION: TF2 implementation of KNN
-#        USAGE:
+#  DESCRIPTION: TF 2.0b implementation of KNN
+#        USAGE: use interface of KNN class and its METRIC/WEIGHTING subclasses
 #      OPTIONS:
 # REQUIREMENTS:
 #
 #      LICENCE:
 #
-#         BUGS:
-#        NOTES:
+#         BUGS: 
+#           1) Some parameters are treated as variables, this creates unnesesary large graph (tf.cond).
+#           2) Cosine similarity can be optimized with some precomputations
+#
+#        NOTES: 
 #       AUTHOR: Jiří Tumpach (tumpji),
 # ORGANIZATION:
 #      VERSION: 1.0
@@ -114,8 +117,6 @@ class KNN(Classifier):
                     tf.less(size_trained_features, 1e-7),
                     self.train_features,
                     tf.realdiv(self.train_features, size_trained_features))
-
-            #import pdb; pdb.set_trace();
 
             distance = tf.matmul(normalized_input_features, tf.squeeze(normalized_trainded_features, axis=0)) 
         else:
@@ -330,7 +331,6 @@ if __name__ == '__main__':
                 ('manh', KNN.METRIC.MANHATTAN,      'minkowski', 1),
                 ('eucl', KNN.METRIC.EUCLID,         'minkowski', 2),
                 ('maxi', KNN.METRIC.MAXIMUM,        'chebyshev', 0),
-                #('cosi', KNN.METRIC.COSINE,         sklearn.metrics.pairwise.cosine_similarity, 0),
                 ('omin', KNN.METRIC.MINKOWSKI_3,    'minkowski', 3) ]:
             for weights_knn, weights_sklearn in [
                     (KNN.WEIGHTING.ONE, 'uniform'), 
