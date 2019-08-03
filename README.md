@@ -15,15 +15,27 @@ All models have the folowing interface:
 * fit(X,[Y]) train model
 * predict(X) returns classification based on actual training result
 
-## Data manipulation 
+## Data manipulation
 Class DatasetGeneration provides interface to training.
 It implements two types of iterators:
 
 * Chunk iterator which returns data associated for each week.
 * Queue iterator which returns data contents of each weeks queue with some size
 
-## Training 
-Training is described 
+## Training
+Training can be divided based on actual data manipulation.
+
+### Offline Learning
+Model is trained only in first week, then is evaluated.
+This is usualy unefficient in online data, because of data drift.
+
+### Online Learning with The Last Samples
+Another method is to learn online with M last samples actualized in each week.
+
+### Online Learning with The Defayed Samples 
+The last method use decay of importance of samples realized in weighs of this samples. 
+
+
 
 
 
