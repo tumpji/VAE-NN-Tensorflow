@@ -17,6 +17,9 @@
 #      CREATED: 2019 08.02.
 # =============================================================================
 
+import tensorflow as tf
+from abc import abstractmethod
+
 class Logger:
     def __init__(self, verbose=0):
         self.verbose_level = verbose
